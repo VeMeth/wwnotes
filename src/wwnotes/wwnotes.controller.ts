@@ -16,6 +16,11 @@ import { NoteDto } from './note.dto';
 export class WwnotesController {
   constructor(private WwnotesService: WwnotesService) {}
 
+  @Get(':_id')
+  public async getNoteById(@Param('_id') _id: string) {
+    return this.WwnotesService.getNoteById(_id);
+  }
+
   @Get()
   public getNotes() {
     return this.WwnotesService.getNotes();
@@ -26,16 +31,11 @@ export class WwnotesController {
     return this.WwnotesService.postNote(note);
   }
 
-  @Get(':id')
-  public async getNoteById(@Param('_id') _id: string) {
-    return this.WwnotesService.getNoteById(_id);
-  }
-
-  @Delete(':id')
+  @Delete(':_id')
   public async deleteNoteById(@Param('_id') _id: string) {
     return this.WwnotesService.deleteNoteByID(_id);
   }
-  @Put(':id')
+  @Put(':_id')
   public async putNoteById(@Param('_id') _id: string, @Query() query) {
     const propertyName = query.property_name;
     const propertyValue = query.property_value;

@@ -1,5 +1,5 @@
 export class eventDto {
-  readonly _id: string;
+  readonly NoteId: string;
   readonly origin: string;
   readonly target1: string;
   readonly target2: string;
