@@ -3,10 +3,10 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Iwwevents } from './interfaces/wwevents.interface';
 import { eventDto } from './events.dto';
-
+import { wwnotesSchema } from 'src/wwnotes/schemas/wwnotes.schema';
+import { Iwwnotes } from 'src/wwnotes/interfaces/wwnotes.interface';
 const eventProjection = {
   __v: false,
-  _id: false,
 };
 
 @Injectable()
@@ -14,6 +14,8 @@ export class WweventsService {
   constructor(
     @InjectModel('WweventsSchema')
     private readonly wweventsModel: Model<Iwwevents>,
+    @InjectModel('wwnotesSchema')
+    private readonly wwnoteModel: Model<Iwwnotes>,
   ) {}
 
   public async getevents(): Promise<eventDto[]> {
@@ -26,7 +28,21 @@ export class WweventsService {
 
   public async postevent(newevent: eventDto): Promise<eventDto> {
     const event = await new this.wweventsModel(newevent);
-    return event.save();
+    event
+      .save()
+      .then((result) => {
+        this.wwnoteModel.findOne({ id: event.id }, (err, fnote) => {
+          if (fnote) {
+            fnote.events.push(event);
+            fnote.save();
+          }
+        });
+      })
+      .catch((error) => {
+        throw new HttpException(error, 404);
+      });
+
+    return event;
   }
 
   public async geteventById(id: number): Promise<eventDto> {

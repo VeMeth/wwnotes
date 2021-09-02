@@ -6,7 +6,6 @@ import { NoteDto } from './note.dto';
 
 const noteProjection = {
   __v: false,
-  _id: false,
 };
 
 @Injectable()
