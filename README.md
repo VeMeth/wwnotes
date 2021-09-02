@@ -3,7 +3,7 @@
 
 ## Todo
 
-- Relationship between events and nots
+- Relationship between events and notes
 - UI
 - API Integration
 
