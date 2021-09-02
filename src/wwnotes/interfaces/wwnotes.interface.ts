@@ -1,7 +1,7 @@
 import { Document, Schema } from 'mongoose';
 
 export interface Iwwnotes extends Document {
-  readonly id: number;
+  readonly _id: string;
   readonly role: string;
   readonly name: string;
   readonly events: [

@@ -27,18 +27,18 @@ export class WweventsController {
   }
 
   @Get(':id')
-  public async geteventById(@Param('id') id: number) {
-    return this.WweventService.geteventById(id);
+  public async geteventById(@Param('_id') _id: string) {
+    return this.WweventService.geteventById(_id);
   }
 
   @Delete(':id')
-  public async deleteeventById(@Param('id') id: number) {
-    return this.WweventService.deleteeventByID(id);
+  public async deleteeventById(@Param('_id') _id: string) {
+    return this.WweventService.deleteeventByID(_id);
   }
   @Put(':id')
-  public async puteventById(@Param('id') id: number, @Query() query) {
+  public async puteventById(@Param('_id') _id: string, @Query() query) {
     const propertyName = query.property_name;
     const propertyValue = query.property_value;
-    return this.WweventService.puteventById(id, propertyName, propertyValue);
+    return this.WweventService.puteventById(_id, propertyName, propertyValue);
   }
 }

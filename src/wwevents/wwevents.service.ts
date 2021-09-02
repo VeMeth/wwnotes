@@ -31,7 +31,7 @@ export class WweventsService {
     event
       .save()
       .then((result) => {
-        this.wwnoteModel.findOne({ id: event.id }, (err, fnote) => {
+        this.wwnoteModel.findOne({ _id: event.id }, (err, fnote) => {
           if (fnote) {
             fnote.events.push(event);
             fnote.save();
@@ -45,29 +45,29 @@ export class WweventsService {
     return event;
   }
 
-  public async geteventById(id: number): Promise<eventDto> {
+  public async geteventById(_id: string): Promise<eventDto> {
     const event = await this.wweventsModel
-      .findOne({ id }, eventProjection)
+      .findOne({ _id }, eventProjection)
       .exec();
     if (!event) {
       throw new HttpException('Not Found', 404);
     }
     return event;
   }
-  public async deleteeventByID(id: number): Promise<any> {
-    const event = await this.wweventsModel.deleteOne({ id }).exec();
+  public async deleteeventByID(_id: string): Promise<any> {
+    const event = await this.wweventsModel.deleteOne({ _id }).exec();
     if (event.deletedCount === 0) {
       throw new HttpException('Not Found', 404);
     }
     return event;
   }
   public async puteventById(
-    id: number,
+    _id: string,
     propertyName: string,
     propertyValue,
   ): Promise<any> {
     const event = await this.wweventsModel
-      .findOneAndUpdate({ id }, { [propertyName]: propertyValue })
+      .findOneAndUpdate({ _id }, { [propertyName]: propertyValue })
       .exec();
     if (!event) {
       throw new HttpException('Not Found', 404);

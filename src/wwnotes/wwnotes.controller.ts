@@ -27,18 +27,18 @@ export class WwnotesController {
   }
 
   @Get(':id')
-  public async getNoteById(@Param('id') id: number) {
-    return this.WwnotesService.getNoteById(id);
+  public async getNoteById(@Param('_id') _id: string) {
+    return this.WwnotesService.getNoteById(_id);
   }
 
   @Delete(':id')
-  public async deleteNoteById(@Param('id') id: number) {
-    return this.WwnotesService.deleteNoteByID(id);
+  public async deleteNoteById(@Param('_id') _id: string) {
+    return this.WwnotesService.deleteNoteByID(_id);
   }
   @Put(':id')
-  public async putNoteById(@Param('id') id: number, @Query() query) {
+  public async putNoteById(@Param('_id') _id: string, @Query() query) {
     const propertyName = query.property_name;
     const propertyValue = query.property_value;
-    return this.WwnotesService.putNoteById(id, propertyName, propertyValue);
+    return this.WwnotesService.putNoteById(_id, propertyName, propertyValue);
   }
 }

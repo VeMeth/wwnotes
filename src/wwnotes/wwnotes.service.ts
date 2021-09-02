@@ -27,27 +27,27 @@ export class WwnotesService {
     return note.save();
   }
 
-  public async getNoteById(id: number): Promise<NoteDto> {
-    const note = await this.wwnoteModel.findOne({ id }, noteProjection).exec();
+  public async getNoteById(_id: string): Promise<NoteDto> {
+    const note = await this.wwnoteModel.findOne({ _id }, noteProjection).exec();
     if (!note) {
       throw new HttpException('Not Found', 404);
     }
     return note;
   }
-  public async deleteNoteByID(id: number): Promise<any> {
-    const note = await this.wwnoteModel.deleteOne({ id }).exec();
+  public async deleteNoteByID(_id: string): Promise<any> {
+    const note = await this.wwnoteModel.deleteOne({ _id }).exec();
     if (note.deletedCount === 0) {
       throw new HttpException('Not Found', 404);
     }
     return note;
   }
   public async putNoteById(
-    id: number,
+    _id: string,
     propertyName: string,
     propertyValue,
   ): Promise<any> {
     const note = await this.wwnoteModel
-      .findOneAndUpdate({ id }, { [propertyName]: propertyValue })
+      .findOneAndUpdate({ _id }, { [propertyName]: propertyValue })
       .exec();
     if (!note) {
       throw new HttpException('Not Found', 404);
