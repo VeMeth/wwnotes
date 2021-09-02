@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Body,
   Controller,
@@ -14,18 +15,22 @@ import { NoteDto } from './note.dto';
 @Controller('wwnotes')
 export class WwnotesController {
   constructor(private WwnotesService: WwnotesService) {}
+
   @Get()
   public getNotes() {
     return this.WwnotesService.getNotes();
   }
+
   @Post()
   public postNote(@Body() note: NoteDto) {
     return this.WwnotesService.postNote(note);
   }
+
   @Get(':id')
   public async getNoteById(@Param('id') id: number) {
     return this.WwnotesService.getNoteById(id);
   }
+
   @Delete(':id')
   public async deleteNoteById(@Param('id') id: number) {
     this.WwnotesService.deleteNoteByID(id);
@@ -37,3 +42,4 @@ export class WwnotesController {
     return this.WwnotesService.putNoteById(id, propertyName, propertyValue);
   }
 }
+ 
