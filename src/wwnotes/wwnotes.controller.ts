@@ -33,7 +33,7 @@ export class WwnotesController {
 
   @Delete(':id')
   public async deleteNoteById(@Param('id') id: number) {
-    this.WwnotesService.deleteNoteByID(id);
+    return this.WwnotesService.deleteNoteByID(id);
   }
   @Put(':id')
   public async putNoteById(@Param('id') id: number, @Query() query) {

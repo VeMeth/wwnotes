@@ -33,7 +33,7 @@ export class WweventsController {
 
   @Delete(':id')
   public async deleteeventById(@Param('id') id: number) {
-    this.WweventService.deleteeventByID(id);
+    return this.WweventService.deleteeventByID(id);
   }
   @Put(':id')
   public async puteventById(@Param('id') id: number, @Query() query) {
