@@ -42,4 +42,3 @@ export class WwnotesController {
     return this.WwnotesService.putNoteById(id, propertyName, propertyValue);
   }
 }
- 

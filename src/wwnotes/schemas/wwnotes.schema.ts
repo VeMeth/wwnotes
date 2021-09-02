@@ -5,4 +5,3 @@ export const wwnotesSchema = new mongoose.Schema({
   role: String,
   name: String,
 });
-
