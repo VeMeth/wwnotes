@@ -55,6 +55,10 @@ export class WweventsService {
     return event;
   }
   public async deleteeventByID(_id: string): Promise<any> {
+    const oevent = await (await this.wweventsModel.findById({ _id })).NoteId;
+    await this.wwnoteModel.findByIdAndUpdate(oevent, {
+      $pull: { events: _id },
+    });
     const event = await this.wweventsModel.findByIdAndDelete({ _id }).exec();
     return event;
   }
