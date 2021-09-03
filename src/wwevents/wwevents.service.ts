@@ -1,9 +1,9 @@
 import { Injectable, HttpException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Iwwevents } from './interfaces/wwevents.interface';
 import { eventDto } from './events.dto';
-import { wwnotesSchema } from 'src/wwnotes/schemas/wwnotes.schema';
+/*import { wwnotesSchema } from 'src/wwnotes/schemas/wwnotes.schema';*/
 import { Iwwnotes } from 'src/wwnotes/interfaces/wwnotes.interface';
 const eventProjection = {
   __v: false,
@@ -27,34 +27,53 @@ export class WweventsService {
   }
 
   public async postevent(newevent: eventDto): Promise<eventDto> {
-    const event = await new this.wweventsModel(newevent);
-    await event.save();
-
-    await this.wwnoteModel.findOne({ _id: event.NoteId }, (err, fnote) => {
-      if (fnote) {
-        fnote.events.push(event);
-        fnote.save();
+    if (isValidObjectId(newevent.NoteId)) {
+      const exists = await this.wwnoteModel.findOne({ _id: newevent.NoteId });
+      if (!exists) {
+        return Promise.reject(
+          new HttpException('NoteID does not refer to existing NoteID', 404),
+        );
       }
-    });
-    return event;
+
+      const event = await new this.wweventsModel(newevent);
+      await event.save();
+
+      await this.wwnoteModel.findOne({ _id: event.NoteId }, (err, fnote) => {
+        if (fnote) {
+          fnote.events.push(event);
+          fnote.save();
+        }
+      });
+      return event;
+    } else {
+      return Promise.reject(new HttpException('Invalid ObjectID', 400));
+    }
   }
 
   public async geteventById(_id: string): Promise<eventDto> {
-    const event = await this.wweventsModel
-      .findById({ _id }, eventProjection)
-      .exec();
-    if (!event) {
-      throw new HttpException('Not Found', 404);
+    if (isValidObjectId(_id)) {
+      const event = await this.wweventsModel
+        .findById({ _id }, eventProjection)
+        .exec();
+      if (!event) {
+        return Promise.reject(new HttpException('Not Found', 404));
+      }
+      return event;
+    } else {
+      return Promise.reject(new HttpException('Invalid ObjectID', 400));
     }
-    return event;
   }
   public async deleteeventByID(_id: string): Promise<any> {
-    const oevent = await (await this.wweventsModel.findById({ _id })).NoteId;
-    await this.wwnoteModel.findByIdAndUpdate(oevent, {
-      $pull: { events: _id },
-    });
-    const event = await this.wweventsModel.findByIdAndDelete({ _id }).exec();
-    return event;
+    if (isValidObjectId(_id)) {
+      const oevent = await (await this.wweventsModel.findById({ _id })).NoteId;
+      await this.wwnoteModel.findByIdAndUpdate(oevent, {
+        $pull: { events: _id },
+      });
+      const event = await this.wweventsModel.findByIdAndDelete({ _id }).exec();
+      return event;
+    } else {
+      return Promise.reject(new HttpException('Invalid ObjectID', 400));
+    }
   }
   public async puteventById(
     _id: string,
