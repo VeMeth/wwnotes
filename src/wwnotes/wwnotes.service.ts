@@ -24,6 +24,7 @@ export class WwnotesService {
 
   public async postNote(newnote: NoteDto): Promise<NoteDto> {
     const note = await new this.wwnoteModel(newnote);
+    console.log('Notes Post Request');
     return note.save();
   }
 

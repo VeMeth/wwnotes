@@ -3,6 +3,7 @@ import { WweventsModule } from './wwevents/wwevents.module';
 import { WwnotesModule } from './wwnotes/wwnotes.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { WwgamesModule } from './wwgames/wwgames.module';
+import { HttpService } from '@nestjs/axios';
 @Module({
   imports: [
     WweventsModule,
