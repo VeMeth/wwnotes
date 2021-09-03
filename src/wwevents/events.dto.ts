@@ -4,4 +4,5 @@ export class eventDto {
   readonly target1: string;
   readonly target2: string;
   readonly type: string;
+  readonly result: string;
 }
