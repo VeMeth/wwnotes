@@ -5,9 +5,9 @@ export class eventDto {
   readonly NoteId: string;
   @ApiProperty({
     description:
-      'origin of the event, the player which generated the event, usually the note',
+      'Phase of the event day1-6x, one day is day plus the following night',
   })
-  readonly origin: string;
+  readonly phase: number;
   @ApiProperty({
     description: 'First target of the event, usually the target being visited',
   })

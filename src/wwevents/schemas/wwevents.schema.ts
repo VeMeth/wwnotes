@@ -10,9 +10,9 @@ export const WweventsSchema = new mongoose.Schema({
       'NoteID is required for events',
     ],
   },
-  origin: String,
   target1: String,
   target2: String,
   type: String,
   result: String,
+  phase: Number,
 });

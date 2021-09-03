@@ -8,7 +8,7 @@ export class NoteDto {
   readonly name: string;
   @ApiProperty({
     required: false,
-    description: 'Automatically populeted by event creation',
+    description: 'Automatically populated by event creation',
   })
   readonly events: [{ type: Schema.Types.ObjectId; ref: 'WweventsSchema' }];
 }
