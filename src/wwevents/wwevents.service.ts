@@ -28,20 +28,14 @@ export class WweventsService {
 
   public async postevent(newevent: eventDto): Promise<eventDto> {
     const event = await new this.wweventsModel(newevent);
-    event
-      .save()
-      .then((result) => {
-        this.wwnoteModel.findOne({ _id: event.NoteId }, (err, fnote) => {
-          if (fnote) {
-            fnote.events.push(event);
-            fnote.save();
-          }
-        });
-      })
-      .catch((error) => {
-        throw new HttpException(error, 404);
-      });
+    await event.save();
 
+    await this.wwnoteModel.findOne({ _id: event.NoteId }, (err, fnote) => {
+      if (fnote) {
+        fnote.events.push(event);
+        fnote.save();
+      }
+    });
     return event;
   }
 
