@@ -8,11 +8,10 @@ import { WwgamesService } from './wwgames.service';
 @Controller('wwgames')
 export class WwgamesController {
   constructor(private WwgamesService: WwgamesService) {}
-  @Get('game')
+  @Get(':WGameId')
   @ApiOkResponse({ description: 'Game created' })
-  @ApiNotFoundResponse({ description: 'Event with provided ID not found' })
-  @ApiBadRequestResponse({ description: 'Invalid Game ID' })
-  public async createGame(GameId) {
-    return this.WwgamesService.createGame(GameId);
+  @ApiBadRequestResponse({ description: 'Invalid or missingGame ID' })
+  public async createGame(@Param('WGameId') WGameId: string) {
+    return this.WwgamesService.createGame(WGameId);
   }
 }

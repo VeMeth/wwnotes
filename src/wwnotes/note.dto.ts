@@ -6,6 +6,8 @@ export class NoteDto {
   readonly role: string;
   @ApiProperty({ description: 'Ingame Name of the Player' })
   readonly name: string;
+  @ApiProperty({ description: 'Ingame Name of the Player' })
+  readonly GameId: string;
   @ApiProperty({
     required: false,
     description: 'Automatically populated by event creation',

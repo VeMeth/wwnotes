@@ -3,12 +3,12 @@ import { Schema } from 'mongoose';
 
 export class gamesDto {
   @ApiProperty({ description: 'Game name (vmh-001)' })
-  readonly GameId: string;
-  @ApiProperty({ description: 'Ingame Name of the Player' })
+  readonly GameName: string;
+  @ApiProperty({ description: 'Is the game still active' })
   readonly active: boolean;
-  @ApiProperty({
+  /*@ApiProperty({
     required: false,
     description: 'Automatically populated by notes creation',
   })
-  readonly notes: [{ type: Schema.Types.ObjectId; ref: 'WwnotesSchema' }];
+  readonly notes: [{ type: Schema.Types.ObjectId; ref: 'WwnotesSchema' }];*/
 }
