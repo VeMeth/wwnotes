@@ -15,6 +15,7 @@ export class WwnotesService {
   ) {}
 
   public async getNotes(): Promise<NoteDto[]> {
+    console.log('Get Notes Request');
     const notes = await this.wwnoteModel.find({}, noteProjection).exec();
     if (!notes || !notes[0]) {
       throw new HttpException('Not Found', 404);
@@ -31,16 +32,12 @@ export class WwnotesService {
   public async getNoteById(_id: string): Promise<NoteDto> {
     console.log(_id);
     const note = await this.wwnoteModel.findById(_id).exec();
-    /*if (!note) {
-      throw new HttpException('Not Found', 404);
-    }*/
+
     return note;
   }
   public async deleteNoteByID(_id: string): Promise<any> {
     const note = await this.wwnoteModel.findByIdAndDelete({ _id }).exec();
-    /*if (note.deletedCount === 0) {
-      throw new HttpException('Not Found', 404);
-    }*/
+
     return note;
   }
   public async putNoteById(

@@ -3,8 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { Model } from 'mongoose';
 import { Iwwngames } from './interfaces/wwgames.interfaces';
 import { InjectModel } from '@nestjs/mongoose';
-import { map } from 'rxjs';
-import { response } from 'express';
+import { map, lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class WwgamesService {
@@ -15,25 +14,21 @@ export class WwgamesService {
   ) {}
 
   public async createGame(GameId: string) {
-    console.log('Create Game');
-    const plist = await this.httpService
+    console.log('Post request');
+    const request = this.httpService
       .get(
         'https://archive.werewolv.es/extra/liveview/api/game/parsed/smc-400.json',
       )
-      .pipe(map((response) => response.data.game.identities));
-    plist.subscribe({
-      next: (identities) => {
-        identities.forEach((element) => {
-          console.log('Adding Note for ', element);
-          this.httpService
-            .post('http://localhost:3000/wwnotes', {
-              name: element,
-              role: 'Unknown',
-            })
-            .pipe(map((response) => response.data));
-        });
-      },
+      .pipe(map((response) => response.data));
+
+    const response = await lastValueFrom(request);
+    console.log('Response = ', response);
+    response.game.identities.forEach(async (element) => {
+      console.log('Adding Note for ', element);
+      const postRequest = this.httpService
+        .post('http://localhost:3000/wwnotes', { name: element })
+        .pipe(map((response) => response.data));
+      const postResponse = await lastValueFrom(postRequest);
     });
-    return response;
   }
 }
