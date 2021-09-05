@@ -5,7 +5,9 @@ declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  app.enableCors({
+    origin: ['http://localhost:5000'],
+  });
   const options = new DocumentBuilder()
     .setTitle('WwNotes API')
     .setDescription('WW.es Notetaker API')
