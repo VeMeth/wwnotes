@@ -7,25 +7,22 @@ import { get_custom_elements_slots } from "svelte/internal";
 	async function getNotes() {
 		let response = await fetch('http://localhost:3000/wwnotes');
 		let notes = await response.json();
-		console.log(notes)
 		return notes; }
 	const notespromise = getNotes();
 
 	async function getEvent(noteid: string) {
 		let response = await fetch('http://localhost:3000/wwevents/' + noteid);
 		let events = await response.json();
-		await console.log(events);
 		return events; }
 	const eventpromise = getNotes();
 
-	async function getUsername(uid): string {
+	async function getUsername(uid): Promise<any> {
     const result = await getNotes().then((result) => {
       const player = result.find(obj => {
         return obj._id === uid
       })
       return player.name; 
     });
-    console.log('result = ', result);
     return result;
   }
 
