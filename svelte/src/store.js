@@ -15,7 +15,7 @@ Here, we'll create a derived store to hold the drink names.
 export const noteNames = derived(apiData, ($apiData) => {
   console.log('updating noteNames');
   return $apiData.map((playernote) => playernote);
-  
+
   return [];
 });
 

@@ -196,7 +196,7 @@ sortByKey($sevents, "type");
 						{/each}
 						</select></td>
 
-					<td>{ev.phase}</td>
+					<td><input on:change={e => setProperty( ev._id, "phase", e.target.value)} bind:value={ev.phase}></td>
 
 					<td><select on:change={e => setProperty( ev._id, "target1", e.target.value)} bind:value={ev.target1} >
 						{#each $noteNames as note}
@@ -267,7 +267,7 @@ sortByKey($sevents, "type");
 									<option value="" >none</option>
 								</select></td>
 							<td><input bind:value={nresult}></td>
-							<td><button on:click={e => newEvent(ntype, nNoteId, ntarget1, ntarget2, nresult) } disabled={nNoteId === ""}><i class="fa fa-plus"></i></button></td>
+							<td><button on:click={e => newEvent(ntype, nNoteId, ntarget1, ntarget2, nresult) } disabled={nNoteId === ""}><i class="fa fa-plus-circle"></i></button></td>
 						</tr>
 							<p class = "rest">Delete Mode: <Switch bind:checked={deleteconfirm}></Switch></p>
 							{:catch error}
@@ -322,7 +322,7 @@ sortByKey($sevents, "type");
 	}
 
 
-	i.fa.fa-plus{
+	i.fa.fa-plus-circle{
 		color: blue;
 
 	}
