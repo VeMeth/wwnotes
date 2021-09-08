@@ -27,12 +27,11 @@ export class WweventsService {
   }
 
   public async postevent(newevent: eventDto): Promise<eventDto> {
+    console.log('newevent = ', newevent);
     if (isValidObjectId(newevent.NoteId)) {
       const exists = await this.wwnoteModel.findOne({ _id: newevent.NoteId });
       if (!exists) {
-        return Promise.reject(
-          new HttpException('NoteID does not refer to existing NoteID', 404),
-        );
+        return Promise.reject(new HttpException(newevent.NoteId, 412));
       }
 
       const event = await new this.wweventsModel(newevent);
@@ -56,7 +55,7 @@ export class WweventsService {
         .findById({ _id }, eventProjection)
         .exec();
       if (!event) {
-        return Promise.reject(new HttpException('Not Found', 404));
+        return Promise.reject(new HttpException('NoteID not found', 412));
       }
       return event;
     } else {
