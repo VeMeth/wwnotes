@@ -2,6 +2,7 @@
 import { log } from "console";
 import { writable, derived, get } from 'svelte/store';
 import { get_custom_elements_slots, onMount } from "svelte/internal";
+import Switch from './Switch.svelte';
 import { apiData, apiData1, apiData2, noteNames, wwevents, getEvents, sevents, rroles } from './store.js';
 import type { stringify } from "querystring";
 
@@ -17,6 +18,9 @@ let ntarget1= "";
 let ntarget2= "";
 let nresult= "";
 let nphase= "0"
+
+let deleteconfirm = false
+
 
 
 	//Getting Notes list for playerlist
@@ -140,6 +144,7 @@ async function  deleteEvent(id: string) {
 	<title>WW-Notes</title>
 	<meta name="robots" content="noindex nofollow" />
 	<html lang="en" />
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 </svelte:head>
 
 <main>
@@ -148,7 +153,7 @@ async function  deleteEvent(id: string) {
 		
 {#if $nloaded && $eloaded && rloaded}		
 <table>
-	<th>Type</th><th>Origin</th><th>Target 1</th><th>Target 2</th><th>Result</th><th>Action</th>
+	<th>Type</th><th>Origin</th><th>Target 1</th><th>Target 2</th><th>Result</th><th>Action</th> 
 				{#await $sevents}
 					<p>Loading...</p>
 				{:then event}
@@ -178,7 +183,7 @@ async function  deleteEvent(id: string) {
 						{/each}
 						<option value="">none</option>
 					</select></td>
-				<td><input on:change={e => setProperty( ev._id, "result", e.target.value)} bind:value={ev.result}></td><td><button on:click={e => deleteEvent(ev._id) }>-</button></td></tr>
+				<td><input on:change={e => setProperty( ev._id, "result", e.target.value)} bind:value={ev.result}></td><td>{#if deleteconfirm} <button  on:click={e => deleteEvent(ev._id) }><i class="fa fa-times-circle"></i></button>{/if}</td></tr>
 				{/each}
 
 
@@ -223,11 +228,11 @@ async function  deleteEvent(id: string) {
 									{/each}
 									<option value="">none</option>
 								</select></td>
-							<td><input bind:value={nresult}></td><td><button on:click={e => newEvent(ntype, nNoteId, ntarget1, ntarget2, nresult) } disabled={nNoteId === ""}>+</button></td></tr>
+							<td><input bind:value={nresult}></td><td><button on:click={e => newEvent(ntype, nNoteId, ntarget1, ntarget2, nresult) } disabled={nNoteId === ""}><i class="fa fa-plus-circle"></i></button></td></tr>
 			
 			</table>
 {/if}
-
+<p class = "rest">Delete Mode: <Switch bind:checked={deleteconfirm}></Switch></p>
 </div>
 </main>
 
@@ -262,5 +267,14 @@ async function  deleteEvent(id: string) {
 		border: #ff3e00;
 		color: #ff3e00;
 	}
+	p.rest {
+		text-align: center;
+		color: #ff3e00;
+	}
+
+	button {
+		color: #ff3e00;
+	}
+
 	}
 </style>
