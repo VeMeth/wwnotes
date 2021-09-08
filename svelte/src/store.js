@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store';
+import { get, writable, derived } from 'svelte/store';
 
 /** Store for your data. 
 This assumes the data you're pulling back will be an array.
@@ -13,8 +13,9 @@ For our use case, we only care about the drink names, not the other information.
 Here, we'll create a derived store to hold the drink names.
 **/
 export const noteNames = derived(apiData, ($apiData) => {
+  console.log('updating noteNames');
   return $apiData.map((playernote) => playernote);
-
+  
   return [];
 });
 
@@ -39,12 +40,25 @@ const { subscribe, set } = writable([]);
 // Export subscriptable data. Magic happens here.
 export const sevents = { subscribe };
 
+function getUsername(uid) {
+  const foundnote = get(noteNames).find((obj) => {
+    return obj._id === uid;
+  });
+  return foundnote ? foundnote.name : '';
+}
+
 export const getEvents = async () => {
   const response = await fetch('http://localhost:3000/wwevents');
   const api_events = await response.json();
 
   if (response.ok) {
     console.log('Events updated');
+    for (const ae of api_events) {
+      const playername = getUsername(ae._id);
+      console.log('noteNames = ', get(noteNames));
+      ae.playername = playername;
+    }
+    console.log(api_events);
     set(api_events); // Set the store data to API state
   }
 };

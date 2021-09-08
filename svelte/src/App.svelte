@@ -25,60 +25,63 @@ let deleteconfirm = false
 let sorttype = "type";
 
 
-	//Getting Notes list for playerlist
-	onMount(async () => {
-			fetch("http://localhost:3000/wwnotes")
-		.then(response => response.json())
-		.then(data => {
-			apiData.set(data);
-			nloaded.set(true);
-		}).catch(error => {
-			console.log(error);
-			return [];
-		});
+		let notespromise; // dunno if these need to be `let`???
+        let eventspromise;
 
-		//Getting events for the game
-		fetch("http://localhost:3000/wwevents")
-		.then(eresponse => eresponse.json())
-		.then(edata => {
-				apiData1.set(edata);
-			eloaded.set(true);
-		}).catch(error => {
-			console.log(error);
-			return [];
-		});
+    async function getNotes() {
+        let response = await fetch('http://localhost:3000/wwnotes');
+        let notes = await response.json();
+        return notes; 
+        }
+    async function getEvent(noteid: string) {
+        let response = await fetch('http://localhost:3000/wwevents/' + noteid);
+        let events = await response.json();
+        return events; 
+        }
 
-		//Getting player list from Shane for Dropdown list
-		fetch("https://archive.werewolv.es/extra/gamefinder/api/roles/")
-		.then(rresponse => rresponse.json())
-		.then(rdata => {
-				apiData2.set(rdata);
-			rloaded.set(true);
-		}).catch(error => {
-			console.log(error);
-			return [];
-		});
+    onMount(async () => {
+        const loadingNotes = fetch("http://localhost:3000/wwnotes")
+            .then(response => response.json())
+                    .then(data => {
+            apiData.set(data);
+            nloaded.set(true);
+            }).catch(error => {
+            console.log(error);
+            return [];
+            });
+        //Getting events for the game
+        const loadingEvents = fetch("http://localhost:3000/wwevents")
+                    .then(eresponse => eresponse.json())
+                    .then(edata => {
+                apiData1.set(edata);
+            eloaded.set(true);
+                     }).catch(error => {
+            console.log(error);
+            return [];
+             });
+        //Getting player list from Shane for Dropdown list
+        const loadingRoles = fetch("https://archive.werewolv.es/extra/gamefinder/api/roles/")
+                    .then(rresponse => rresponse.json())
+            .then(rdata => {
+            apiData2.set(rdata);
+            rloaded.set(true);
+            }).catch(error => {
+            console.log(error);
+            return [];
+            });
 
+                await loadingNotes;
+                await loadingEvents;
+                await loadingRoles;
 
+            	notespromise = getNotes();
+                eventspromise = getEvents();
+    });
 
-	});
-
-	getEvents();
 
 
 	//let roles = $rroles;
 
-	async function getNotes() {
-		let response = await fetch('http://localhost:3000/wwnotes');
-		let notes = await response.json();
-		return notes; }
-	const notespromise = getNotes();
-
-	async function getEvent(noteid: string) {
-		let response = await fetch('http://localhost:3000/wwevents/' + noteid);
-		let events = await response.json();
-		return events; }
-	const eventpromise = getNotes();
 
 
 	async function  setProperty(id: string, prop: string,val: string) {
