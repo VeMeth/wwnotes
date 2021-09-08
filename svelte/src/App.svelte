@@ -5,11 +5,13 @@ import { get_custom_elements_slots, onMount } from "svelte/internal";
 import Switch from './Switch.svelte';
 import { apiData, apiData1, apiData2, noteNames, wwevents, getEvents, sevents, rroles } from './store.js';
 import type { stringify } from "querystring";
-
+import { fly, fade, slide } from 'svelte/transition';
 
 export const nloaded = writable(false);	
 export const eloaded = writable(false);
 export const rloaded = writable(false);
+
+let iphase = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
 
 //New entry variables
 let ntype = "";
@@ -20,7 +22,7 @@ let nresult= "";
 let nphase= "0"
 
 let deleteconfirm = false
-
+let sorttype = "type";
 
 
 	//Getting Notes list for playerlist
@@ -64,7 +66,7 @@ let deleteconfirm = false
 	getEvents();
 
 
-	let roles = $rroles;
+	//let roles = $rroles;
 
 	async function getNotes() {
 		let response = await fetch('http://localhost:3000/wwnotes');
@@ -123,7 +125,7 @@ async function  deleteEvent(id: string) {
 
 }
 
-  function getUsername(uid): string {
+function getUsername(uid): string {
     const foundnote = $noteNames.find(obj => {
         return obj._id === uid
       });
@@ -138,6 +140,28 @@ async function  deleteEvent(id: string) {
     return foundnote ? foundnote.name : '';
   }
 
+
+  function sortByKey(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key];
+        var y = b[key];
+
+        if (typeof x == "string")
+        {
+            x = (""+x).toLowerCase(); 
+        }
+        if (typeof y == "string")
+        {
+            y = (""+y).toLowerCase();
+        }
+
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
+
+sortByKey($sevents, "type");
+
+
 </script>
 
 <svelte:head>
@@ -151,22 +175,26 @@ async function  deleteEvent(id: string) {
 	<h1>WW-Notes</h1>
 	<div>
 		
-{#if $nloaded && $eloaded && rloaded}		
-<table>
-	<th>Type</th><th>Origin</th><th>Target 1</th><th>Target 2</th><th>Result</th><th>Action</th> 
-				{#await $sevents}
+{#if $nloaded && $eloaded && $rloaded}		
+<table transition:fade="{{ duration: 700 }}">
+	<th>Player</th><th>Type</th><th>Phase</th><th>Target 1</th><th>Target 2</th><th>Result</th><th>Action</th> 
+				{#await sortByKey($sevents, "type")}
 					<p>Loading...</p>
 				{:then event}
 					{#each event as ev}
-						<tr><td><select on:change={e => setProperty( ev._id, "type", e.target.value)} bind:value={ev.type} >
-							{#each $rroles as role}
+						<tr transition:fade="{{ duration: 700 }}"><td>{getUsername(ev.NoteId)}</td>
+
+
+						<td><select on:change={e => setProperty( ev._id, "type", e.target.value)} bind:value={ev.type} >
+						{#each $rroles as role}
 							<option value={role}>
 							{role}
 							</option>
-					{/each}
-						
-				</select></td><td>{getUsername(ev.NoteId)}</td>
-				
+						{/each}
+						</select></td>
+
+					<td>{ev.phase}</td>
+
 					<td><select on:change={e => setProperty( ev._id, "target1", e.target.value)} bind:value={ev.target1} >
 						{#each $noteNames as note}
 						<option value={note._id}>
@@ -175,6 +203,8 @@ async function  deleteEvent(id: string) {
 						{/each}
 						<option value="">none</option>
 					</select></td>
+
+
 					<td><select on:change={e => setProperty( ev._id, "target2", e.target.value)} bind:value={ev.target2} >
 						{#each $noteNames as note}
 						<option value={note._id}>
@@ -183,25 +213,20 @@ async function  deleteEvent(id: string) {
 						{/each}
 						<option value="">none</option>
 					</select></td>
-				<td><input on:change={e => setProperty( ev._id, "result", e.target.value)} bind:value={ev.result}></td><td>{#if deleteconfirm} <button  on:click={e => deleteEvent(ev._id) }><i class="fa fa-times-circle"></i></button>{/if}</td></tr>
+
+
+				<td><input on:change={e => setProperty( ev._id, "result", e.target.value)} bind:value={ev.result}></td>
+
+
+				<td>{#if deleteconfirm} <button transition:fade="{{ duration: 1000 }}" on:click={e => deleteEvent(ev._id) }><i class="fa fa-times-circle"></i></button>{/if}</td></tr>
 				{/each}
 
 
 
-		{:catch error}
-		
-					<p style="color: red">{error.message}</p>		
-		{/await}
+
 							<!-- Add new entry-->
 
-								<tr><td><select bind:value={ntype} >
-									{#each $rroles as role}
-									<option value={role}>
-									{role}
-									</option>
-								{/each}
-							</select>
-								</td>
+								<tr>
 								<td><select bind:value={nNoteId} >
 									{#each $noteNames as note}
 									<option value={note._id}>
@@ -211,7 +236,17 @@ async function  deleteEvent(id: string) {
 								
 								</select></td>
 			
-			
+								<td><select bind:value={ntype} >
+									{#each $rroles as role}
+									<option value={role}>
+									{role}
+									</option>
+								{/each}
+							</select>
+								</td>
+
+								<td><input bind:value={nphase}></td>
+
 								<td><select bind:value={ntarget1} >
 									{#each $noteNames as note}
 									<option value={note._id}>
@@ -226,13 +261,20 @@ async function  deleteEvent(id: string) {
 									{note.name}
 									</option>
 									{/each}
-									<option value="">none</option>
+									<option value="" >none</option>
 								</select></td>
-							<td><input bind:value={nresult}></td><td><button on:click={e => newEvent(ntype, nNoteId, ntarget1, ntarget2, nresult) } disabled={nNoteId === ""}><i class="fa fa-plus-circle"></i></button></td></tr>
-			
+							<td><input bind:value={nresult}></td>
+							<td><button on:click={e => newEvent(ntype, nNoteId, ntarget1, ntarget2, nresult) } disabled={nNoteId === ""}><i class="fa fa-plus"></i></button></td>
+						</tr>
+							<p class = "rest">Delete Mode: <Switch bind:checked={deleteconfirm}></Switch></p>
+							{:catch error}
+								
+							<p style="color: red">{error.message}</p>	
+								
+				{/await}
 			</table>
 {/if}
-<p class = "rest">Delete Mode: <Switch bind:checked={deleteconfirm}></Switch></p>
+
 </div>
 </main>
 
@@ -266,15 +308,19 @@ async function  deleteEvent(id: string) {
 	input {
 		border: #ff3e00;
 		color: #ff3e00;
+		text-align: center;
 	}
 	p.rest {
 		text-align: center;
 		color: #ff3e00;
 	}
-
-	button {
-		color: #ff3e00;
+	i.fa.fa-times-circle {
+		color: red;
 	}
+
+
+	i.fa.fa-plus{
+		color: blue;
 
 	}
 </style>
