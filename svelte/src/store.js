@@ -6,6 +6,7 @@ If it's going to be an object, default this to an empty object.
 **/
 export const apiData = writable([]);
 export const apiData1 = writable([]);
+export const apiData2 = writable([]);
 
 /** Data transformation.
 For our use case, we only care about the drink names, not the other information.
@@ -19,6 +20,12 @@ export const noteNames = derived(apiData, ($apiData) => {
 
 export const wwevents = derived(apiData1, ($apiData1) => {
   return $apiData1.map((wwevent) => wwevent);
+
+  return [];
+});
+
+export const rroles = derived(apiData2, ($apiData2) => {
+  return $apiData2.map((rrroles) => rrroles);
 
   return [];
 });

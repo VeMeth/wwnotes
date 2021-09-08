@@ -2,25 +2,28 @@
 import { log } from "console";
 import { writable, derived, get } from 'svelte/store';
 import { get_custom_elements_slots, onMount } from "svelte/internal";
-import { apiData, apiData1, noteNames, wwevents, getEvents, sevents } from './store.js';
+import { apiData, apiData1, apiData2, noteNames, wwevents, getEvents, sevents, rroles } from './store.js';
 
 
-export const loaded = writable(false);	
+export const nloaded = writable(false);	
 export const eloaded = writable(false);
+export const rloaded = writable(false);
 let test;
 
+
+	//Getting Notes list for playerlist
 	onMount(async () => {
 		fetch("http://localhost:3000/wwnotes")
 	.then(response => response.json())
 	.then(data => {
 		apiData.set(data);
-		loaded.set(true);
+		nloaded.set(true);
 	}).catch(error => {
 		console.log(error);
 		return [];
 	});
 
-
+	//Getting events for the game
 	fetch("http://localhost:3000/wwevents")
 	.then(eresponse => eresponse.json())
 	.then(edata => {
@@ -31,6 +34,19 @@ let test;
 		return [];
 	});
 
+	//Getting player list from Shane for Dropdown list
+	fetch("https://archive.werewolv.es/extra/gamefinder/api/roles/")
+	.then(rresponse => rresponse.json())
+	.then(rdata => {
+			apiData2.set(rdata);
+			//console.log(rdata);
+		rloaded.set(true);
+	}).catch(error => {
+		console.log(error);
+		return [];
+	});
+
+
 
 	});
 
@@ -38,7 +54,7 @@ let test;
 
 	console.log(noteNames);
 
-	let roles = ["Protector", "Seer", "Gravedigger", "Werewolf"];
+	let roles = $rroles;
 
 	async function getNotes() {
 		let response = await fetch('http://localhost:3000/wwnotes');
@@ -59,8 +75,6 @@ let test;
 		console.log('Update Prop');
 		getEvents();
 		return 0;
-		
-		//console.log('http://localhost:3000/wwevents/' + id + "?property_name=" +  prop + "&property_value=" + val)
 		
 		
 }
@@ -94,21 +108,39 @@ let test;
 	<h1>WW-N0tes</h1>
 	<div>
 		
-{#if $loaded && $eloaded}		
+{#if $nloaded && $eloaded && rloaded}		
 <table>
 	<th>Type</th><th>Origin</th><th>Target 1</th><th>Target 2</th><th>Result</th>
 				{#await $sevents}
 					<p>Loading...</p>
 				{:then event}
-				{#each event as ev}
-					<tr><td><select on:change={e => setProperty( ev._id, "type", e.target.value)} bind:value={ev.type} >
-						{#each roles as role}
-						<option value={role}>
-						{role}
-						</option>
-		{/each}
+					{#each event as ev}
+						<tr><td><select on:change={e => setProperty( ev._id, "type", e.target.value)} bind:value={ev.type} >
+							{#each $rroles as role}
+							<option value={role}>
+							{role}
+							</option>
+					{/each}
 						
-	</select></td><td>{getUsername(ev.NoteId)}</td><td>{getUsername(ev.target1)}</td><td>{getUsername(ev.target2)}</td><td> {ev.result}</td></tr>
+				</select></td><td>{getUsername(ev.NoteId)}</td>
+				
+					<td><select on:change={e => setProperty( ev._id, "target1", e.target.value)} bind:value={ev.target1} >
+						{#each $noteNames as note}
+						<option value={note._id}>
+						{note.name}
+						</option>
+						{/each}
+						<option value="">none</option>
+					</select></td>
+					<td><select on:change={e => setProperty( ev._id, "target2", e.target.value)} bind:value={ev.target2} >
+						{#each $noteNames as note}
+						<option value={note._id}>
+						{note.name}
+						</option>
+						{/each}
+						<option value="">none</option>
+					</select></td>
+				<td><input on:change={e => setProperty( ev._id, "result", e.target.value)} bind:value={ev.result}></td></tr>
 				{/each}
 				{:catch error}
 					<p style="color: red">{error.message}</p>		
@@ -138,5 +170,8 @@ let test;
 		main {
 			max-width: none;
 		}
+	td {
+		border: #ff3e00;
+	}
 	}
 </style>
