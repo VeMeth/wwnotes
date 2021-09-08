@@ -41,9 +41,9 @@ const { subscribe, set } = writable([]);
 export const sevents = { subscribe };
 
 function getUsername(uid) {
-  const foundnote = get(noteNames).find((obj) => {
-    return obj._id === uid;
-  });
+  //console.log('Looking up note for uid = ', uid);
+  const foundnote = get(noteNames).find((obj) => obj._id === uid);
+  //console.log('foundnote = ', foundnote);
   return foundnote ? foundnote.name : '';
 }
 
@@ -54,11 +54,11 @@ export const getEvents = async () => {
   if (response.ok) {
     console.log('Events updated');
     for (const ae of api_events) {
-      const playername = getUsername(ae._id);
-      console.log('noteNames = ', get(noteNames));
+      const playername = getUsername(ae.NoteId);
+      //console.log('noteNames = ', get(noteNames));
       ae.playername = playername;
     }
-    console.log(api_events);
+    //console.log(api_events);
     set(api_events); // Set the store data to API state
   }
 };
