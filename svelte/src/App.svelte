@@ -180,8 +180,8 @@ sortByKey($sevents, "type");
 		
 {#if $nloaded && $eloaded && $rloaded}		
 <table transition:fade="{{ duration: 700 }}">
-	<th>Player</th><th>Type</th><th>Phase</th><th>Target 1</th><th>Target 2</th><th>Result</th><th>Action</th> 
-				{#await sortByKey($sevents, "type")}
+	<th on:click={e => sorttype = 'playername'}>Player</th><th on:click={e => sorttype = 'type'}>Type</th><th on:click={e => sorttype = 'phase'}>Phase</th><th on:click={e => sorttype = 'target1'}>Target 1</th><th on:click={e => sorttype = 'target2'}>Target 2</th><th>Result</th><th>Action</th> 
+				{#await sortByKey($sevents, sorttype)}
 					<p>Loading...</p>
 				{:then event}
 					{#each event as ev}
