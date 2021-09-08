@@ -110,6 +110,14 @@ async function newEvent(ptype: string, pNoteId: string, ptarget1: string, ptarge
 }
 
 
+async function  deleteEvent(id: string) {
+		let url = 'http://localhost:3000/wwevents/' + id;
+		let response = await fetch(url ,{method: 'DELETE'});
+		console.log('Delete Event');
+		getEvents();
+		return 0;
+
+}
 
   function getUsername(uid): string {
     const foundnote = $noteNames.find(obj => {
@@ -170,7 +178,7 @@ async function newEvent(ptype: string, pNoteId: string, ptarget1: string, ptarge
 						{/each}
 						<option value="">none</option>
 					</select></td>
-				<td><input on:change={e => setProperty( ev._id, "result", e.target.value)} bind:value={ev.result}></td></tr>
+				<td><input on:change={e => setProperty( ev._id, "result", e.target.value)} bind:value={ev.result}></td><td><button on:click={e => deleteEvent(ev._id) }>-</button></td></tr>
 				{/each}
 
 
