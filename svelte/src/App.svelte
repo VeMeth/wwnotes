@@ -24,44 +24,43 @@ let nphase= "0"
 let deleteconfirm = false
 let sorttype = "type";
 
+let notespromise; // dunno if these need to be `let`???
+let eventspromise;
 
-		let notespromise; // dunno if these need to be `let`???
-        let eventspromise;
+async function getNotes() {
+    let response = await fetch('http://localhost:3000/wwnotes');
+    let notes = await response.json();
+    return notes; 
+    }
+async function getEvent(noteid: string) {
+    let response = await fetch('http://localhost:3000/wwevents/' + noteid);
+    let events = await response.json();
+    return events; 
+    }
 
-    async function getNotes() {
-        let response = await fetch('http://localhost:3000/wwnotes');
-        let notes = await response.json();
-        return notes; 
-        }
-    async function getEvent(noteid: string) {
-        let response = await fetch('http://localhost:3000/wwevents/' + noteid);
-        let events = await response.json();
-        return events; 
-        }
-
-    onMount(async () => {
-        const loadingNotes = fetch("http://localhost:3000/wwnotes")
+onMount(async () => {
+    const loadingNotes = fetch("http://localhost:3000/wwnotes")
             .then(response => response.json())
-                    .then(data => {
-            apiData.set(data);
-            nloaded.set(true);
-            }).catch(error => {
-            console.log(error);
-            return [];
-            });
+                .then(data => {
+        apiData.set(data);
+        nloaded.set(true);
+        }).catch(error => {
+           console.log(error);
+        return [];
+        });
         //Getting events for the game
-        const loadingEvents = fetch("http://localhost:3000/wwevents")
-                    .then(eresponse => eresponse.json())
-                    .then(edata => {
+    const loadingEvents = fetch("http://localhost:3000/wwevents")
+                .then(eresponse => eresponse.json())
+            	.then(edata => {
                 apiData1.set(edata);
             eloaded.set(true);
                      }).catch(error => {
             console.log(error);
             return [];
-             });
+        });
         //Getting player list from Shane for Dropdown list
-        const loadingRoles = fetch("https://archive.werewolv.es/extra/gamefinder/api/roles/")
-                    .then(rresponse => rresponse.json())
+    const loadingRoles = fetch("https://archive.werewolv.es/extra/gamefinder/api/roles/")
+            .then(rresponse => rresponse.json())
             .then(rdata => {
             apiData2.set(rdata);
             rloaded.set(true);
@@ -78,21 +77,14 @@ let sorttype = "type";
                 eventspromise = getEvents();
     });
 
-
-
-	//let roles = $rroles;
-
-
-
-	async function  setProperty(id: string, prop: string,val: string) {
-		let url = 'http://localhost:3000/wwevents/' + id + "?property_name=" +  prop + "&property_value=" + val;
-		let response = await fetch(url ,{method: 'PUT'});
-		console.log('Update Prop');
-		getEvents();
-		return 0;
-		
-		
+async function  setProperty(id: string, prop: string,val: string) {
+	let url = 'http://localhost:3000/wwevents/' + id + "?property_name=" +  prop + "&property_value=" + val;
+	let response = await fetch(url ,{method: 'PUT'});
+	console.log('Update Prop');
+	getEvents();
+	return 0;	
 }
+
 async function newEvent(ptype: string, pNoteId: string, ptarget1: string, ptarget2: string, presult: string) {
     let url = 'http://localhost:3000/wwevents/';
     let response = await fetch(url ,{method: 'POST', headers: {
@@ -120,11 +112,11 @@ async function newEvent(ptype: string, pNoteId: string, ptarget1: string, ptarge
 
 
 async function  deleteEvent(id: string) {
-		let url = 'http://localhost:3000/wwevents/' + id;
-		let response = await fetch(url ,{method: 'DELETE'});
-		console.log('Delete Event');
-		getEvents();
-		return 0;
+	let url = 'http://localhost:3000/wwevents/' + id;
+	let response = await fetch(url ,{method: 'DELETE'});
+	console.log('Delete Event');
+	getEvents();
+	return 0;
 
 }
 
@@ -133,18 +125,18 @@ function getUsername(uid): string {
         return obj._id === uid
       });
     return foundnote ? foundnote.name : '';
-  }
+}
 
 
-  function getID(uname): string {
+function getID(uname): string {
     const foundnote = $noteNames.find(obj => {
         return obj.name === uname;
       });
     return foundnote ? foundnote.name : '';
-  }
+}
 
 
-  function sortByKey(array, key) {
+function sortByKey(array, key) {
     return array.sort(function(a, b) {
         var x = a[key];
         var y = b[key];
@@ -180,102 +172,116 @@ sortByKey($sevents, "type");
 		
 {#if $nloaded && $eloaded && $rloaded}		
 <table transition:fade="{{ duration: 700 }}">
-	<th on:click={e => sorttype = 'playername'}>Player</th><th on:click={e => sorttype = 'type'}>Type</th><th on:click={e => sorttype = 'phase'}>Phase</th><th on:click={e => sorttype = 'target1'}>Target 1</th><th on:click={e => sorttype = 'target2'}>Target 2</th><th>Result</th><th>Action</th> 
-				{#await sortByKey($sevents, sorttype)}
-					<p>Loading...</p>
-				{:then event}
-					{#each event as ev}
-						<tr transition:fade="{{ duration: 700 }}"><td>{getUsername(ev.NoteId)}</td>
+	<th on:click={e => sorttype = 'playername'}>Player</th>
+	<th on:click={e => sorttype = 'type'}>Type</th>
+	<th on:click={e => sorttype = 'phase'}>Phase</th>
+	<th on:click={e => sorttype = 'target1'}>Target 1</th>
+	<th on:click={e => sorttype = 'target2'}>Target 2</th>
+	<th>Result</th>
+	<th>Action</th> 
+	{#await sortByKey($sevents, sorttype)}
+		<p>Loading...</p>
+	{:then event}
+		{#each event as ev}
+			<tr transition:fade="{{ duration: 700 }}"><td>{getUsername(ev.NoteId)}</td>
 
 
-						<td><select on:change={e => setProperty( ev._id, "type", e.target.value)} bind:value={ev.type} >
-						{#each $rroles as role}
+				<td><select on:change={e => setProperty( ev._id, "type", e.target.value)} bind:value={ev.type} >
+					{#each $rroles as role}
 							<option value={role}>
 							{role}
 							</option>
-						{/each}
-						</select></td>
+					{/each}
+					</select>
+				</td>
 
-					<td><input on:change={e => setProperty( ev._id, "phase", e.target.value)} bind:value={ev.phase}></td>
+				<td><input on:change={e => setProperty( ev._id, "phase", e.target.value)} bind:value={ev.phase}></td>
 
-					<td><select on:change={e => setProperty( ev._id, "target1", e.target.value)} bind:value={ev.target1} >
+				<td><select on:change={e => setProperty( ev._id, "target1", e.target.value)} bind:value={ev.target1} >
 						{#each $noteNames as note}
 						<option value={note._id}>
 						{note.name}
 						</option>
 						{/each}
 						<option value="">none</option>
-					</select></td>
+					</select>
+				</td>
 
 
-					<td><select on:change={e => setProperty( ev._id, "target2", e.target.value)} bind:value={ev.target2} >
+				<td><select on:change={e => setProperty( ev._id, "target2", e.target.value)} bind:value={ev.target2} >
 						{#each $noteNames as note}
 						<option value={note._id}>
 						{note.name}
 						</option>
 						{/each}
 						<option value="">none</option>
-					</select></td>
+					</select>
+				</td>
 
 
-				<td><input on:change={e => setProperty( ev._id, "result", e.target.value)} bind:value={ev.result}></td>
+				<td><input on:change={e => setProperty( ev._id, "result", e.target.value)} bind:value={ev.result}>
+				</td>
 
 
-				<td>{#if deleteconfirm} <button transition:fade="{{ duration: 1000 }}" on:click={e => deleteEvent(ev._id) }><i class="fa fa-times-circle"></i></button>{/if}</td></tr>
-				{/each}
+				<td>{#if deleteconfirm} <button transition:fade="{{ duration: 1000 }}" on:click={e => deleteEvent(ev._id) }><i class="fa fa-times-circle"></i></button>{/if}
+				</td>
+			</tr>
+		{/each}
 
+			<!-- Add new entry-->
 
-
-
-							<!-- Add new entry-->
-
-								<tr>
-								<td><select bind:value={nNoteId} >
-									{#each $noteNames as note}
-									<option value={note._id}>
-										{note.name}
-									</option>
-								{/each}
+			<tr>
+				<td><select bind:value={nNoteId} >
+					{#each $noteNames as note}
+					<option value={note._id}>
+						{note.name}
+					</option>
+					{/each}
 								
-								</select></td>
+					</select>
+				</td>
 			
-								<td><select bind:value={ntype} >
-									{#each $rroles as role}
-									<option value={role}>
-									{role}
-									</option>
+				<td><select bind:value={ntype} >
+						{#each $rroles as role}
+						<option value={role}>
+							{role}
+						</option>
+							{/each}
+						</select>
+				</td>
+
+				<td><input bind:value={nphase}></td>
+
+				<td><select bind:value={ntarget1} >
+						{#each $noteNames as note}
+						<option value={note._id}>
+							{note.name}
+						</option>
+						{/each}
+						<option value="">none</option>
+						</select>
+					</td>
+					<td><select bind:value={ntarget2} >
+							{#each $noteNames as note}
+							<option value={note._id}>
+								{note.name}
+							</option>
 								{/each}
+							<option value="" >none</option>
 							</select>
-								</td>
+					</td>
+					<td><input bind:value={nresult}></td>
 
-								<td><input bind:value={nphase}></td>
-
-								<td><select bind:value={ntarget1} >
-									{#each $noteNames as note}
-									<option value={note._id}>
-									{note.name}
-									</option>
-									{/each}
-									<option value="">none</option>
-								</select></td>
-								<td><select bind:value={ntarget2} >
-									{#each $noteNames as note}
-									<option value={note._id}>
-									{note.name}
-									</option>
-									{/each}
-									<option value="" >none</option>
-								</select></td>
-							<td><input bind:value={nresult}></td>
-							<td><button on:click={e => newEvent(ntype, nNoteId, ntarget1, ntarget2, nresult) } disabled={nNoteId === ""}><i class="fa fa-plus-circle"></i></button></td>
-						</tr>
-							<p class = "rest">Delete Mode: <Switch bind:checked={deleteconfirm}></Switch></p>
+					<td><button on:click={e => newEvent(ntype, nNoteId, ntarget1, ntarget2, nresult) } disabled={nNoteId === ""}><i class="fa fa-plus-circle"></i></button>
+					</td>
+				</tr>
+						<p class = "rest">Delete Mode: <Switch bind:checked={deleteconfirm}></Switch></p>
 							{:catch error}
 								
-							<p style="color: red">{error.message}</p>	
+						<p style="color: red">{error.message}</p>	
 								
-				{/await}
-			</table>
+	{/await}
+	</table>
 {/if}
 
 </div>
