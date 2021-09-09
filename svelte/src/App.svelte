@@ -11,6 +11,9 @@ export const nloaded = writable(false);
 export const eloaded = writable(false);
 export const rloaded = writable(false);
 
+
+
+
 let iphase = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
 
 //New entry variables
@@ -21,10 +24,12 @@ let ntarget2= "";
 let nresult= "";
 let nphase= "0"
 
+//UI Variables
 let deleteconfirm = false
 let sorttype = "type";
 
-let notespromise; // dunno if these need to be `let`???
+//Promises to load the data in the right order
+let notespromise;
 let eventspromise;
 
 async function getNotes() {
@@ -40,41 +45,41 @@ async function getEvent(noteid: string) {
 
 onMount(async () => {
     const loadingNotes = fetch("http://localhost:3000/wwnotes")
-            .then(response => response.json())
-                .then(data => {
-        apiData.set(data);
-        nloaded.set(true);
+        .then(response => response.json())
+        .then(data => {
+        	apiData.set(data);
+        	nloaded.set(true);
         }).catch(error => {
-           console.log(error);
+        	console.log(error);
         return [];
         });
         //Getting events for the game
     const loadingEvents = fetch("http://localhost:3000/wwevents")
-                .then(eresponse => eresponse.json())
-            	.then(edata => {
+            .then(eresponse => eresponse.json())
+            .then(edata => {
                 apiData1.set(edata);
-            eloaded.set(true);
-                     }).catch(error => {
-            console.log(error);
+            	eloaded.set(true);
+            }).catch(error => {
+            	console.log(error);
             return [];
         });
         //Getting player list from Shane for Dropdown list
     const loadingRoles = fetch("https://archive.werewolv.es/extra/gamefinder/api/roles/")
-            .then(rresponse => rresponse.json())
-            .then(rdata => {
+        .then(rresponse => rresponse.json())
+        .then(rdata => {
             apiData2.set(rdata);
             rloaded.set(true);
             }).catch(error => {
-            console.log(error);
+            	console.log(error);
             return [];
             });
 
-                await loadingNotes;
-                await loadingEvents;
-                await loadingRoles;
+        await loadingNotes;
+        await loadingEvents;
+        await loadingRoles;
 
-            	notespromise = getNotes();
-                eventspromise = getEvents();
+        notespromise = getNotes();
+        eventspromise = getEvents();
     });
 
 async function  setProperty(id: string, prop: string,val: string) {
@@ -91,14 +96,14 @@ async function newEvent(ptype: string, pNoteId: string, ptarget1: string, ptarge
     'Content-Type': 'application/json;charset=utf-8'
   },
     body: JSON.stringify({
-                type: ptype,
-                NoteId: pNoteId,
-                target1: ptarget1,
-                target2: ptarget2,
-                result: presult,
-                phase: nphase,
-                
-            })});
+        type: ptype,
+        NoteId: pNoteId,
+        target1: ptarget1,
+        target2: ptarget2,
+        result: presult,
+        phase: nphase,
+        })
+	});
 
     console.log('New Event created');
     ntype = "";
@@ -167,9 +172,9 @@ sortByKey($sevents, "type");
 </svelte:head>
 
 <main>
-	<h1>WW-Notes</h1>
+	
 	<div>
-		
+	<!--<h1>WW-Notes</h1> -->		
 {#if $nloaded && $eloaded && $rloaded}		
 <table transition:fade="{{ duration: 700 }}">
 	<th on:click={e => sorttype = 'playername'}>Player</th>
@@ -186,7 +191,7 @@ sortByKey($sevents, "type");
 			<tr transition:fade="{{ duration: 700 }}"><td>{getUsername(ev.NoteId)}</td>
 
 
-				<td><select on:change={e => setProperty( ev._id, "type", e.target.value)} bind:value={ev.type} >
+				<td><select class="style widthHeight" on:change={e => setProperty( ev._id, "type", e.target.value)} bind:value={ev.type} >
 					{#each $rroles as role}
 							<option value={role}>
 							{role}
@@ -294,30 +299,43 @@ sortByKey($sevents, "type");
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
+		font-size: 1.1em;		
 	}
 
 	h1 {
 		color: #ff3e00;
 		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
+		font-size: 3em;
+		font-weight: 100;		
 	}
 	th,td {
 		border: 1px dotted  #ff3e00;
 		color: #ff3e00;
+		padding: 0px 0px;
+		margin: 0px  0px;
+		text-align: center; 
+    	vertical-align:middle;
 	}
 	@media (min-width: 640px) {
 		main {
 			max-width: none;
 		}
+	}	
 	select {
 		border: 0;
 		color: #ff3e00;
+		background-color: black;
+		padding: 0px 0px;
+		margin: 0px  0px;
+		vertical-align: middle;
 	}
 	input {
 		border: #ff3e00;
 		color: #ff3e00;
 		text-align: center;
+		background-color: black;
+		padding: 0px 0px;
+		margin: 0px  0px;
 	}
 	p.rest {
 		text-align: center;
@@ -326,10 +344,36 @@ sortByKey($sevents, "type");
 	i.fa.fa-times-circle {
 		color: red;
 	}
-
+	button {
+		background-color: black;
+		border: none;
+		padding: 0px 0px;
+		margin: 0px  0px;
+		text-align: center;
+	}
 
 	i.fa.fa-plus-circle{
-		color: blue;
+		color: green;
 
 	}
+	:root {
+		background-color: black;
+		font-family: "Helvetica";
+	}
+
+	select::-webkit-scrollbar {
+  	width: 10px;
+  	height: 10px;
+	}
+
+	select::-webkit-scrollbar-track {
+  	border: orange;
+  	background-color: black;
+	}
+
+	select::-webkit-scrollbar-thumb {
+	background-color: #ff3e00;
+	border: 1px solid red;
+	}
+
 </style>
