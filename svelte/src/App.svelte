@@ -174,7 +174,7 @@ sortByKey($sevents, "type");
 <main>
 	
 	<div>
-	<!--<h1>WW-Notes</h1> -->		
+	<h1>WW-Notes</h1>		
 {#if $nloaded && $eloaded && $rloaded}		
 <table transition:fade="{{ duration: 700 }}">
 	<th on:click={e => sorttype = 'playername'}>Player</th>
@@ -305,7 +305,7 @@ sortByKey($sevents, "type");
 	h1 {
 		color: #ff3e00;
 		text-transform: uppercase;
-		font-size: 3em;
+		font-size: 2em;
 		font-weight: 100;		
 	}
 	th,td {
@@ -373,7 +373,7 @@ sortByKey($sevents, "type");
 
 	select::-webkit-scrollbar-thumb {
 	background-color: #ff3e00;
-	border: 1px solid red;
+	border: 1px solid #ff3e00;
 	}
 
 </style>

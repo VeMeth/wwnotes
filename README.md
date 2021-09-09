@@ -4,12 +4,14 @@
 ## Todo
 
 - ~~Relationship between events and notes~~
-- UI
-- API Integration
+- ~~UI~~
+- ~~API Integration~~
+- Phase handling, connected to the archive for dead/living state of players
+- Logic on top of checks to offer the approriate check options for events
 
 ## Issues
 
- - Missing exception handling for empty NoteID on events
+ - None at the moment
 
  ## Install
  - npm install
