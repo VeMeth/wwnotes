@@ -6,7 +6,6 @@ import { WwgamesModule } from './wwgames/wwgames.module';
 import { HttpService } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 
-console.log(process.env.MONGO_HOST);
 @Module({
   imports: [
     ConfigModule.forRoot(),

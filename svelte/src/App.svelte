@@ -26,7 +26,7 @@ let nphase= "0"
 
 //UI Variables
 let deleteconfirm = false
-let sorttype = "type";
+let sorttype = "playername";
 
 //Promises to load the data in the right order
 let notespromise;
@@ -159,7 +159,7 @@ function sortByKey(array, key) {
     });
 }
 
-sortByKey($sevents, "type");
+sortByKey($sevents, "playername");
 
 
 </script>
@@ -177,11 +177,11 @@ sortByKey($sevents, "type");
 	<h1>WW-Notes</h1>		
 {#if $nloaded && $eloaded && $rloaded}		
 <table transition:fade="{{ duration: 700 }}">
-	<th on:click={e => sorttype = 'playername'}>Player</th>
-	<th on:click={e => sorttype = 'type'}>Type</th>
-	<th on:click={e => sorttype = 'phase'}>Phase</th>
-	<th on:click={e => sorttype = 'target1'}>Target 1</th>
-	<th on:click={e => sorttype = 'target2'}>Target 2</th>
+	<th on:click={e => sorttype = 'playername'}>Player {#if sorttype === 'playername'} <i class="fa fa-arrow-down"></i>{/if}</th>
+	<th on:click={e => sorttype = 'type'}>Type {#if sorttype === 'type'} <i class="fa fa-arrow-down"></i>{/if}</th>
+	<th on:click={e => sorttype = 'phase'}>Phase {#if sorttype === 'phase'} <i class="fa fa-arrow-down"></i>{/if}</th>
+	<th on:click={e => sorttype = 'target1'}>Target 1 {#if sorttype === 'target1'} <i class="fa fa-arrow-down"></i>{/if}</th>
+	<th on:click={e => sorttype = 'target2'}>Target 2 {#if sorttype === 'target2'} <i class="fa fa-arrow-down"></i>{/if}</th>
 	<th>Result</th>
 	<th>Action</th> 
 	{#await sortByKey($sevents, sorttype)}
