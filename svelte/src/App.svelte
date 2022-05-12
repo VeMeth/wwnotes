@@ -22,7 +22,7 @@ let nNoteId = "";
 let ntarget1= "";
 let ntarget2= "";
 let nresult= "";
-let nphase= "0"
+let nphase= "0";
 
 //UI Variables
 let deleteconfirm = false
@@ -94,7 +94,7 @@ async function newEvent(ptype: string, pNoteId: string, ptarget1: string, ptarge
     let url = 'http://localhost:3000/wwevents/';
     let response = await fetch(url ,{method: 'POST', headers: {
     'Content-Type': 'application/json;charset=utf-8'
-  },
+	},
     body: JSON.stringify({
         type: ptype,
         NoteId: pNoteId,

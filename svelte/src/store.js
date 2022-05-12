@@ -15,35 +15,23 @@ Here, we'll create a derived store to hold the drink names.
 export const noteNames = derived(apiData, ($apiData) => {
   console.log('updating noteNames');
   return $apiData.map((playernote) => playernote);
-
-  return [];
 });
 
 export const wwevents = derived(apiData1, ($apiData1) => {
   return $apiData1.map((wwevent) => wwevent);
-
-  return [];
 });
 
 export const rroles = derived(apiData2, ($apiData2) => {
   return $apiData2.map((rrroles) => rrroles);
-
-  return [];
 });
 
-/*
-    Create store with initial empty array. Looks kinda like...
-        const [animals, set] = useState([])
-*/
 const { subscribe, set } = writable([]);
 
-// Export subscriptable data. Magic happens here.
 export const sevents = { subscribe };
 
 function getUsername(uid) {
-  //console.log('Looking up note for uid = ', uid);
   const foundnote = get(noteNames).find((obj) => obj._id === uid);
-  //console.log('foundnote = ', foundnote);
+
   return foundnote ? foundnote.name : '';
 }
 
