@@ -36,7 +36,7 @@ function getUsername(uid) {
 }
 
 export const getEvents = async () => {
-  const response = await fetch('http://localhost:3000/wwevents');
+  const response = await fetch('http://process.env.API_HOST:3000/wwevents');
   const api_events = await response.json();
 
   if (response.ok) {
