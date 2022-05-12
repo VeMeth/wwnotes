@@ -6,7 +6,8 @@ import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
-
+import dotenv from "dotenv"
+dotenv.config(); // inject the content of the .env file into 'process.env'
 const production = !process.env.ROLLUP_WATCH;
 
 function serve() {
@@ -44,7 +45,8 @@ export default {
 			compilerOptions: {
 				// enable run-time checks when not in production
 				dev: !production
-			}
+			},
+			replace: [["process.env.API_HOST", process.env.API_HOST]],
 		}),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance

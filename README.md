@@ -26,3 +26,11 @@
  # Access points
   - http://localhost:5000/ for UI
   - http://localhost:3000/api for API
+
+# .ENV Parameters 
+ - MONGO_HOST=
+ - MONGO_PASSWORD=
+ - MONGO_USER=
+ - MONGO_DATABASE=
+ - MONGO_PORT=27017
+ - API_HOST=localhost
