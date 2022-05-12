@@ -14,6 +14,7 @@
  - None at the moment
 
  ## Install
+ - Set MongoDB parameters in .env file
  - npm install
  - cd svelte
  - npm install
@@ -24,4 +25,4 @@
 
  # Access points
   - http://localhost:5000/ for UI
-  - http://localhost:3000/ for API
+  - http://localhost:3000/api for API
