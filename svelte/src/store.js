@@ -7,7 +7,7 @@ If it's going to be an object, default this to an empty object.
 export const apiData = writable([]);
 export const apiData1 = writable([]);
 export const apiData2 = writable([]);
-
+const { API_HOST } = __myapp;
 /** Data transformation.
 For our use case, we only care about the drink names, not the other information.
 Here, we'll create a derived store to hold the drink names.
@@ -36,7 +36,7 @@ function getUsername(uid) {
 }
 
 export const getEvents = async () => {
-  const response = await fetch('http://process.env.API_HOST:3000/wwevents');
+  const response = await fetch('http://' + API_HOST + ':3000/wwevents');
   const api_events = await response.json();
 
   if (response.ok) {

@@ -11,7 +11,8 @@ export const nloaded = writable(false);
 export const eloaded = writable(false);
 export const rloaded = writable(false);
 
-
+console.log(__myapp);
+  const { API_HOST } = __myapp;
 
 
 let iphase = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
@@ -33,18 +34,18 @@ let notespromise;
 let eventspromise;
 
 async function getNotes() {
-    let response = await fetch('http://process.env.API_HOST:3000/wwnotes');
+    let response = await fetch('http://'+ API_HOST + ':3000/wwnotes');
     let notes = await response.json();
     return notes; 
     }
 async function getEvent(noteid: string) {
-    let response = await fetch('http://process.env.API_HOST:3000/wwevents/' + noteid);
+    let response = await fetch('http://'+ API_HOST + ':3000/wwevents/' + noteid);
     let events = await response.json();
     return events; 
     }
 
 onMount(async () => {
-    const loadingNotes = fetch("http://process.env.API_HOST:3000/wwnotes")
+    const loadingNotes = fetch('http://'+ API_HOST + ':3000/wwnotes')
         .then(response => response.json())
         .then(data => {
         	apiData.set(data);
@@ -54,7 +55,7 @@ onMount(async () => {
         return [];
         });
         //Getting events for the game
-    const loadingEvents = fetch("http://process.env.API_HOST:3000/wwevents")
+    const loadingEvents = fetch('http://'+ API_HOST + ':3000/wwevents')
             .then(eresponse => eresponse.json())
             .then(edata => {
                 apiData1.set(edata);
@@ -83,7 +84,7 @@ onMount(async () => {
     });
 
 async function  setProperty(id: string, prop: string,val: string) {
-	let url = 'http://process.env.API_HOST:3000/wwevents/' + id + "?property_name=" +  prop + "&property_value=" + val;
+	let url = 'http://'+ API_HOST + ':3000/wwevents/' + id + "?property_name=" +  prop + "&property_value=" + val;
 	let response = await fetch(url ,{method: 'PUT'});
 	console.log('Update Prop');
 	getEvents();
@@ -91,7 +92,7 @@ async function  setProperty(id: string, prop: string,val: string) {
 }
 
 async function newEvent(ptype: string, pNoteId: string, ptarget1: string, ptarget2: string, presult: string) {
-    let url = 'http://process.env.API_HOST:3000/wwevents/';
+    let url = 'http://'+ API_HOST + ':3000/wwevents/';
     let response = await fetch(url ,{method: 'POST', headers: {
     'Content-Type': 'application/json;charset=utf-8'
 	},
@@ -117,7 +118,7 @@ async function newEvent(ptype: string, pNoteId: string, ptarget1: string, ptarge
 
 
 async function  deleteEvent(id: string) {
-	let url = 'http://process.env.API_HOST:3000/wwevents/' + id;
+	let url = 'http://'+ API_HOST + ':3000/wwevents/' + id;
 	let response = await fetch(url ,{method: 'DELETE'});
 	console.log('Delete Event');
 	getEvents();
