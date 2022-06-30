@@ -1,5 +1,5 @@
 import { get, writable, derived } from 'svelte/store';
-
+//import { get_custom_elements_slots, onMount } from "svelte/internal";
 /** Store for your data. 
 This assumes the data you're pulling back will be an array.
 If it's going to be an object, default this to an empty object.
@@ -8,7 +8,12 @@ export const apiData = writable([]);
 export const apiData1 = writable([]);
 export const apiData2 = writable([]);
 const { API_HOST } = __myapp;
+
+var regexp = new RegExp('/(?<=//)(.*?)(?=:)');
+let url = regexp.exec(window.location.href)[1];
+
 /** Data transformation.
+ * 
 For our use case, we only care about the drink names, not the other information.
 Here, we'll create a derived store to hold the drink names.
 **/
@@ -36,7 +41,7 @@ function getUsername(uid) {
 }
 
 export const getEvents = async () => {
-  const response = await fetch('http://' + API_HOST + ':3000/wwevents');
+  const response = await fetch('http://' + url + ':3000/wwevents');
   const api_events = await response.json();
 
   if (response.ok) {
