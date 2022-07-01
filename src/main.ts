@@ -6,7 +6,7 @@ console.log('Cors host: ' + process.env.CORS_HOST);
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: [process.env.CORS_HOST],
+    origin: '*',
   });
   const options = new DocumentBuilder()
     .setTitle('WwNotes API')
