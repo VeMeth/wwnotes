@@ -10,6 +10,7 @@ let connstring: string;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 if (process.env.MONGO_USER.length < 1) {
+  console.log('No Mongo Username found');
   connstring =
     'mongodb://' +
     process.env.MONGO_HOST +
@@ -28,6 +29,7 @@ if (process.env.MONGO_USER.length < 1) {
     process.env.MONGO_PORT +
     '/wwnotes';
 }
+console.log('ConnectionString:' + connstring);
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -38,3 +40,4 @@ if (process.env.MONGO_USER.length < 1) {
   ],
 })
 export class AppModule {}
+console.log('Mongohost: ' + process.env.MONGO_HOST);
