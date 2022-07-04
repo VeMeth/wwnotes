@@ -9,8 +9,8 @@ export const apiData1 = writable([]);
 export const apiData2 = writable([]);
 const { API_HOST } = __myapp;
 
-var regexp = new RegExp('/(?<=//)(.*?)(?=:)');
-let url = regexp.exec(window.location.href)[1];
+//var regexp = new RegExp('/(?<=//)(.*?)(?=:)');
+//let url = regexp.exec(window.location.href)[1];
 
 /** Data transformation.
  * 
