@@ -88,7 +88,7 @@ onMount(async () => {
     });
 
 async function  setProperty(id: string, prop: string,val: string) {
-	let url = 'http://'+ url + '/wwevents/' + id + "?property_name=" +  prop + "&property_value=" + val;
+	let url = 'http://'+ API_HOST + '/wwevents/' + id + "?property_name=" +  prop + "&property_value=" + val;
 	let response = await fetch(url ,{method: 'PUT'});
 	console.log('Update Prop');
 	getEvents();
@@ -96,7 +96,7 @@ async function  setProperty(id: string, prop: string,val: string) {
 }
 
 async function newEvent(ptype: string, pNoteId: string, ptarget1: string, ptarget2: string, presult: string) {
-    let url = 'http://'+ url + '/wwevents/';
+    let url = 'http://'+ API_HOST + '/wwevents/';
     let response = await fetch(url ,{method: 'POST', headers: {
     'Content-Type': 'application/json;charset=utf-8'
 	},
