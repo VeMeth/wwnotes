@@ -15,7 +15,6 @@ console.log(__myapp);
   const { API_HOST } = __myapp;
 console.log("URL:" + API_HOST);
 let url = ``;
-url = API_HOST;
 var regexp = new RegExp('/(?<=//)(.*?)(?=:)');
 onMount(() => url = url);  
 
@@ -38,18 +37,18 @@ let notespromise;
 let eventspromise;
 
 async function getNotes() {
-    let response = await fetch('http://'+ url + '/wwnotes');
+    let response = await fetch('http://'+ API_HOST + '/wwnotes');
     let notes = await response.json();
     return notes; 
     }
 async function getEvent(noteid: string) {
-    let response = await fetch('http://'+ url + '/wwevents/' + noteid);
+    let response = await fetch('http://'+ API_HOST + '/wwevents/' + noteid);
     let events = await response.json();
     return events; 
     }
 
 onMount(async () => {
-    const loadingNotes = fetch('http://'+ url + '/wwnotes')
+    const loadingNotes = fetch('http://'+ API_HOST + '/wwnotes')
         .then(response => response.json())
         .then(data => {
         	apiData.set(data);
@@ -59,7 +58,7 @@ onMount(async () => {
         return [];
         });
         //Getting events for the game
-    const loadingEvents = fetch('http://'+ url + '/wwevents')
+    const loadingEvents = fetch('http://'+ API_HOST + '/wwevents')
             .then(eresponse => eresponse.json())
             .then(edata => {
                 apiData1.set(edata);
@@ -122,7 +121,7 @@ async function newEvent(ptype: string, pNoteId: string, ptarget1: string, ptarge
 
 
 async function  deleteEvent(id: string) {
-	let url = 'http://'+ url + '/wwevents/' + id;
+	let url = 'http://'+ API_HOST + '/wwevents/' + id;
 	let response = await fetch(url ,{method: 'DELETE'});
 	console.log('Delete Event');
 	getEvents();
